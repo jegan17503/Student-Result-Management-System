@@ -1,0 +1,217 @@
+# ============================================================
+# JAIN UNIVERSITY
+# STUDENT RESULT MANAGEMENT SYSTEM
+# Python Result Calculation Module
+# ============================================================
+
+class StudentResult:
+
+    def __init__(self, name, student_id, subjects):
+        self.name = name
+        self.student_id = student_id
+        self.subjects = subjects
+
+    # --------------------------------------------------------
+    # Grade Calculation
+    # --------------------------------------------------------
+    def calculate_grade(self, total):
+
+        if 91 <= total <= 100:
+            return "O", 10
+
+        elif 86 <= total <= 90:
+            return "A+", 9
+
+        elif 81 <= total <= 85:
+            return "A", 8
+
+        elif 76 <= total <= 80:
+            return "B+", 7
+
+        elif 71 <= total <= 75:
+            return "B", 6
+
+        elif 66 <= total <= 70:
+            return "C+", 5
+
+        elif 61 <= total <= 65:
+            return "C", 4
+
+        elif 56 <= total <= 60:
+            return "D+", 3
+
+        elif 50 <= total <= 55:
+            return "D", 2
+
+        else:
+            return "F", 0
+
+    # --------------------------------------------------------
+    # Calculate Subject Results
+    # --------------------------------------------------------
+    def calculate_result(self):
+
+        total_grade_points = 0
+        passed = True
+
+        print("\n" + "=" * 70)
+        print("                  STUDENT RESULT")
+        print("=" * 70)
+
+        print("Student Name :", self.name)
+        print("Student ID   :", self.student_id)
+
+        print("-" * 70)
+
+        print(
+            f"{'Subject':20}"
+            f"{'Internal':>10}"
+            f"{'External':>10}"
+            f"{'Total':>10}"
+            f"{'Grade':>10}"
+            f"{'Point':>10}"
+        )
+
+        print("-" * 70)
+
+        for subject, marks in self.subjects.items():
+
+            internal = marks["internal"]
+            external = marks["external"]
+
+            total = internal + external
+
+            grade, point = self.calculate_grade(total)
+
+            total_grade_points += point
+
+            if grade == "F":
+                passed = False
+
+            print(
+                f"{subject:20}"
+                f"{internal:>10}"
+                f"{external:>10}"
+                f"{total:>10}"
+                f"{grade:>10}"
+                f"{point:>10}"
+            )
+
+        # ----------------------------------------------------
+        # CGPA Calculation
+        # ----------------------------------------------------
+
+        number_of_subjects = len(self.subjects)
+
+        cgpa = total_grade_points / number_of_subjects
+
+        # ----------------------------------------------------
+        # Final Grade
+        # ----------------------------------------------------
+
+        if cgpa >= 9.5:
+            final_grade = "O"
+
+        elif cgpa >= 8.5:
+            final_grade = "A+"
+
+        elif cgpa >= 7.5:
+            final_grade = "A"
+
+        elif cgpa >= 6.5:
+            final_grade = "B+"
+
+        elif cgpa >= 5.5:
+            final_grade = "B"
+
+        elif cgpa >= 4.5:
+            final_grade = "C+"
+
+        elif cgpa >= 3.5:
+            final_grade = "C"
+
+        elif cgpa >= 2.5:
+            final_grade = "D+"
+
+        elif cgpa >= 2:
+            final_grade = "D"
+
+        else:
+            final_grade = "F"
+
+        result = "PASS" if passed else "FAIL"
+
+        print("-" * 70)
+
+        print("CGPA        :", round(cgpa, 2))
+        print("Final Grade :", final_grade)
+        print("Result      :", result)
+
+        print("=" * 70)
+
+        return cgpa, final_grade, result
+
+
+# ============================================================
+# MAIN PROGRAM
+# ============================================================
+
+print("=" * 70)
+print("                 JAIN UNIVERSITY")
+print("        STUDENT RESULT MANAGEMENT SYSTEM")
+print("=" * 70)
+
+name = input("Enter Student Name : ")
+student_id = input("Enter Student ID   : ")
+
+subjects = {}
+
+number_of_subjects = int(
+    input("Enter Number of Subjects : ")
+)
+
+for i in range(number_of_subjects):
+
+    print("\nSubject", i + 1)
+
+    subject_name = input("Enter Subject Name : ")
+
+    # Internal Marks out of 70
+    while True:
+
+        internal = float(
+            input("Enter Internal Marks (0-70) : ")
+        )
+
+        if 0 <= internal <= 70:
+            break
+
+        print("Invalid marks! Enter marks between 0 and 70.")
+
+    # External Marks out of 30
+    while True:
+
+        external = float(
+            input("Enter External Marks (0-30) : ")
+        )
+
+        if 0 <= external <= 30:
+            break
+
+        print("Invalid marks! Enter marks between 0 and 30.")
+
+    subjects[subject_name] = {
+        "internal": internal,
+        "external": external
+    }
+
+
+# Create student result object
+student = StudentResult(
+    name,
+    student_id,
+    subjects
+)
+
+# Calculate and display result
+student.calculate_result()
